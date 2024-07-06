@@ -1,10 +1,3 @@
-const instance = basicLightbox.create(`
-    <img src="assets/images/image.png" width="800" height="600">
-`);
-
-instance.show();
-
-instance.show();
 const images = [
   {
     preview:
@@ -70,3 +63,39 @@ const images = [
     description: "Lighthouse Coast Sea",
   },
 ];
+
+const gallery = document.querySelector(".gallery");
+const fragments = document.createDocumentFragment();
+
+images.forEach((image) => {
+  const listItem = document.createElement("li");
+
+  const link = document.createElement("a");
+  link.classList.add("gallery-link");
+  link.href = image.original;
+
+  const img = document.createElement("img");
+  img.style.width = "360px";
+  img.classList.add("gallery-image");
+  img.src = image.preview;
+  img.dataset.source = image.original;
+  img.alt = image.description;
+
+  link.appendChild(img);
+  listItem.appendChild(link);
+  fragments.appendChild(listItem);
+});
+
+gallery.appendChild(fragments);
+
+gallery.addEventListener("click", (event) => {
+  event.preventDefault();
+  if (event.target.nodeName !== "IMG") {
+    return;
+  }
+
+  const modalContent = `<img src="${event.target.dataset.source}" alt="${event.target.alt}"/>`;
+  const instance = basicLightbox.create(modalContent);
+
+  instance.show();
+});
